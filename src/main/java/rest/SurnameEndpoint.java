@@ -3,6 +3,9 @@ package rest;
 import model.Gender;
 import model.Surname;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.bind.JsonbBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.PersistenceContext;
@@ -18,21 +21,26 @@ public class SurnameEndpoint {
     @PersistenceContext
     EntityManager em;
 
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll()
     {
-        TypedQuery<Surname> result =em.createNamedQuery("countAll",Surname.class);
-        int all = result.getResultList().size();
+        TypedQuery<Long> result =em.createNamedQuery("countAll",Long.class);
+        long all = result.getSingleResult();
 
-        TypedQuery<Surname> resultM =em.createNamedQuery("countAllMales",Surname.class).setParameter("MALE", Gender.MALE);
-        int allM = result.getResultList().size();
+        TypedQuery<Long> resultM =em.createNamedQuery("countAllMales",Long.class)
+                .setParameter("MALE", Gender.MALE);
+        long allM = resultM.getSingleResult();
 
-        TypedQuery<Surname> resultF =em.createNamedQuery("countAllFemales",Surname.class).setParameter("FEMALE",Gender.FEMALE);
-        int allF = result.getResultList().size();
-
-        return ("total_all: "+all+"\n total_male:"+allM+"\n total_female: "+allF);
+        TypedQuery<Long> resultF =em.createNamedQuery("countAllFemales",Long.class)
+                .setParameter("FEMALE",Gender.FEMALE);
+        long allF = resultF.getSingleResult();
+        return "{ total_all : "+ all+"\n, total_male "+ allM +"\n, total_Female:"+ allF +"}";
     }
+
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +58,7 @@ public class SurnameEndpoint {
         Surname s = em.createNamedQuery("Find.ById",Surname.class).setParameter("ID",id).getSingleResult();
         em.remove(s);
     }
+
 
 
 }

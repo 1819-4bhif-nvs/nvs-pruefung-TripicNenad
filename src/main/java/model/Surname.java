@@ -13,7 +13,6 @@ import javax.ws.rs.Path;
 public class Surname {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "SURNAME_PK")
     private Long Id;
 
     @Enumerated(EnumType.STRING)

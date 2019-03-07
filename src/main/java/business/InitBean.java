@@ -26,44 +26,47 @@ public class InitBean {
 
     @Transactional
     private void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        //readMales();
-        //readFemales();
+        readMales();
+        readFemales();
 
+
+    }
+
+
+    public void readMales(){
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/maennlich.csv")));
             br.readLine();
             String line;
+            Surname surname;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                surname = new Surname(Gender.MALE,line);
+                em.persist(surname);
             }
+            em.flush();
         } catch (
                 Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    /*public void readMales(){
-        String FILE_NAME = "maennlich.csv";
-        new BufferedReader(new InputStreamReader(this.getClass()
-                .getResourceAsStream(FILE_NAME), Charset.defaultCharset()))
-                .lines()
-                .skip(1)
-                .map(a -> new Surname(Gender.MALE,a))
-                //  .forEach(i -> System.out.println(i.toString()));
-                .forEach(em::merge);
-    }
-
     public void readFemales(){
-        String FILE_NAME = "weiblich.csv";
-        new BufferedReader(new InputStreamReader(this.getClass()
-                .getResourceAsStream(FILE_NAME), Charset.defaultCharset()))
-                .lines()
-                .skip(1)
-                .map(a -> new Surname(Gender.FEMALE, a))
-                .forEach(em::merge);
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/weiblich.csv")));
+            br.readLine();
+            String line;
+            Surname surname;
+            while ((line = br.readLine()) != null) {
+                surname = new Surname(Gender.FEMALE,line);
+                em.persist(surname);
+            }
+            em.flush();
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
     }
-    */
+
 
 
 }
